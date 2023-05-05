@@ -13,62 +13,61 @@
 
 # Terraform setup for S3 Static site, Cloudfront, and Codepipeline
 
-This repository contains a complete deployment for an S3 Static Site setup as origin for a Cloudfront distrubution and with the CICD pipelines with Codepipeline tu update the S3 bucket files each commit to main branch.
+This repository contains a complete deployment for an S3 Static Site setup as the origin for a CloudFront distribution and with the CICD pipelines with Codepipeline to update the S3 bucket files each commit to the main branch and invalidate the cache of the CloudFront distribution.
 
+![Diagram](tf-s3-website-cfront-cpipeline.png "Diagram")
 
-DIAGRAM HERE
-![Diagram](diagram.png "Diagram")
+there are some values that you can customize for this deployment and you can find them in the  `deploy/apply-tfvars/dev.tfvars` file.
 
-there are some values that you can customize of this deployment and you can find them in the `terraform.tfvars` file.
+## To deploy go to the folder `deploy`
 
+The deployment is made with Terraform, and it was divided into three modules as follows
 
-## The deployment is the the folder deploy
+### 1. S3
 
-### 1. Network
+S3 module is in charge of the creation and configuration for the S3 bucket as a static website
 
-The network module creates a VPC for a given CIDR block along with private and public subnets that are defined as a map in the `terraform.tfvars` file
-
-### 2. App
-
-The app module creates the ALB, ASG and the Launch template needed to spin up EC2 instance with a nginx server on it
-
-### 3. Dbs
-
-The db module creates the DB postgres with the values given in the `terraform.tfvars`
-
-
-
-## The content for the web site is in the repo
-
-### Global Vars
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-|prefix_resources_name|prefix that will be used for all resources creation|`map`| |no|
-|other_tags|Aditional tags you can add to all resources|`string`| |no|
+|bucket_name|part of the name that compuond the S3 bucket name|`string`| |no|
+|index_document|path to the index document for the webhost site|`string`| |no|
+|error_document|path to the error document for the webhost site|`string`| |no|
 
-### Module Network Vars
+
+Outputs:  
+bucket_arn  
+bucket_website_endpoint  
+bucket_id  
+
+
+
+### 2. Cloudfront
+Cloudfront module in is charge of the creation of the cloudfront distribution and the two behavior for cache
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-|vpc_cidr_block|cicd used for the creation of the VPC|`string`| |yes|
-|subnet_cicd_az_name|subnets details such as AZs and cicd blocks|`map`| |yes|
+|price_class|option to select the edge location for the cloudfront distribution, valid values PriceClass_All, PriceClass_200, PriceClass_100|`string`| |no|
+
+Outputs:  
+distribution_id  
 
 
-### Module App
+
+
+
+### 3. Codepipeline
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-|asg_target_value|CPU load average target value for the ASG|`number`| |yes|
-
-
-### Module DBs
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|----------|
-|rds_instance_class|instance type to use in the DB|`string`| |yes|
-|rds_allocated_storage|storage size for the DB|`number`| |yes|
-
+|code_pipeline_name|Name for the codepipeline|`string`| |yes|
+|lambda_name|Name for the lambda function used to invalidate the cache|`string`| |yes|
 
 
 ## How setup to deploy to specific acocunt
 
 
+- Make sure to have your credentials in the ~/.aws/credentials folder or in the envvars
+- go to the folder deploy
+- if you have setup DynamoDB table and S3 bucket where to upload and lock the state file, please modify the values in the file `deploy/init-tfvars/dev.tfvars`, otherwise you can comment the content of the file `deploy/-state.tf`
+- for each case execute the corresponding `terraform init` or `terraform init -backend-config=./init-tfvars/dev.tfvars`
+- then execute terraform apply `terraform destroy -var-file ./apply-tfvars/dev.tfvars `
 
-## How update files
+

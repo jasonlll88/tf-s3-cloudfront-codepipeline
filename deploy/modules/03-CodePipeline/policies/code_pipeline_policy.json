@@ -1,0 +1,42 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "codecommit:CancelUploadArchive",
+        "codecommit:GetBranch",
+        "codecommit:GetCommit",
+        "codecommit:GetRepository",
+        "codecommit:GetUploadArchiveStatus",
+        "codecommit:UploadArchive"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "codedeploy:CreateDeployment",
+        "codedeploy:GetApplication",
+        "codedeploy:GetApplicationRevision",
+        "codedeploy:GetDeployment",
+        "codedeploy:GetDeploymentConfig",
+        "codedeploy:RegisterApplicationRevision"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": ["codestar-connections:UseConnection"],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "s3:*",
+        "lambda:InvokeFunction"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    }
+  ]
+}
