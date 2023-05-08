@@ -29,9 +29,9 @@ S3 module is in charge of the creation and configuration for the S3 bucket as a 
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-|bucket_name|part of the name that compuond the S3 bucket name|`string`| |no|
-|index_document|path to the index document for the webhost site|`string`| |no|
-|error_document|path to the error document for the webhost site|`string`| |no|
+|bucket_name|part of the name that compuond the S3 bucket name|`string`| |yes|
+|index_document|path to the index document for the webhost site|`string`| |yes|
+|error_document|path to the error document for the webhost site|`string`| |yes|
 
 
 Outputs:  
@@ -45,7 +45,7 @@ bucket_id
 Cloudfront module in is charge of the creation of the cloudfront distribution and the two behavior for cache
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-|price_class|option to select the edge location for the cloudfront distribution, valid values PriceClass_All, PriceClass_200, PriceClass_100|`string`| |no|
+|price_class|option to select the edge location for the cloudfront distribution, valid values PriceClass_All, PriceClass_200, PriceClass_100|`string`| |yes|
 
 Outputs:  
 distribution_id  
