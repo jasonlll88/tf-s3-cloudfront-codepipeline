@@ -69,5 +69,7 @@ distribution_id
 - if you have setup DynamoDB table and S3 bucket where to upload and lock the state file, please modify the values in the file `deploy/init-tfvars/dev.tfvars`, otherwise you can comment the content of the file `deploy/-state.tf`
 - for each case execute the corresponding `terraform init` or `terraform init -backend-config=./init-tfvars/dev.tfvars`
 - then execute terraform apply `terraform destroy -var-file ./apply-tfvars/dev.tfvars `
+- with the first deployment you need to complete a manual step in AWS CodePipeline to stablish the connection to the github repository.
+
 
 
